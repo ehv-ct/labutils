@@ -35,6 +35,10 @@ class ThorlabsCameraApp(QMainWindow):
         self.frame_count = 0
         self.last_frame_time = time.time()
         self.fps = 30
+        # Recording limit attributes
+        self.record_duration_limit = 0
+        self.record_frame_limit = 0
+        self.recorded_frame_count = 0
         
         self.init_ui()
         self.connect_camera()
@@ -124,6 +128,21 @@ class ThorlabsCameraApp(QMainWindow):
         
         self.recording_label = QLabel("Not Recording")
         recording_layout.addWidget(self.recording_label)
+        # Controls for recording limits
+        duration_layout = QHBoxLayout()
+        duration_layout.addWidget(QLabel("Duration (s):"))
+        self.duration_spinbox = QDoubleSpinBox()
+        self.duration_spinbox.setRange(0, 3600)
+        self.duration_spinbox.setValue(0)
+        duration_layout.addWidget(self.duration_spinbox)
+        recording_layout.addLayout(duration_layout)
+        frames_layout = QHBoxLayout()
+        frames_layout.addWidget(QLabel("Frame Count:"))
+        self.framecount_spinbox = QSpinBox()
+        self.framecount_spinbox.setRange(0, 1000000)
+        self.framecount_spinbox.setValue(0)
+        frames_layout.addWidget(self.framecount_spinbox)
+        recording_layout.addLayout(frames_layout)
         
         # Add control groups to main control layout
         controls_layout.addWidget(exposure_group)
@@ -170,6 +189,8 @@ class ThorlabsCameraApp(QMainWindow):
             return
         
         try:
+            # Trigger acquisition of the next frame for live display
+            self.camera.issue_software_trigger()
             # Get frame from camera
             frame = self.camera.get_pending_frame_or_null()
             if frame is None:
@@ -202,10 +223,14 @@ class ThorlabsCameraApp(QMainWindow):
                 # Convert to BGR by duplicating the channels
                 color_image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
                 self.video_writer.write(color_image)
-                
-                # Update recording duration
+                # Update recording duration and frame count
                 duration = time.time() - self.recording_start_time
-                self.recording_label.setText(f"Recording: {duration:.1f}s")
+                self.recorded_frame_count += 1
+                self.recording_label.setText(f"Recording: {duration:.1f}s, Frames: {self.recorded_frame_count}")
+                # Auto-stop if limits reached
+                if (self.record_duration_limit > 0 and duration >= self.record_duration_limit) or (self.record_frame_limit > 0 and self.recorded_frame_count >= self.record_frame_limit):
+                    self.toggle_recording()
+                    return
                 
             # Display the image
             q_image = QImage(image.data, width, height, width, QImage.Format_Grayscale8)
@@ -281,23 +306,19 @@ class ThorlabsCameraApp(QMainWindow):
                     "Video Files (*.mp4)"
                 )
                 if filename:
-                    # Get camera resolution
+                    # Use sensor dimensions for resolution to avoid missing frame attributes
                     if self.camera:
-                        # Get a frame to determine dimensions
-                        frame = self.camera.get_pending_frame_or_null()
-                        if frame:
-                            width = frame.image_buffer_size_pixels_horizontal
-                            height = frame.image_buffer_size_pixels_vertical
-                        else:
-                            # If no frame is available, use sensor dimensions
-                            width = self.camera.sensor_width_pixels
-                            height = self.camera.sensor_height_pixels
+                        width = self.camera.sensor_width_pixels
+                        height = self.camera.sensor_height_pixels
                     else:
-                        # Default if camera is not available
                         width, height = 1280, 1024
                     
-                    # Initialize video writer (MP4 with H.264 codec)
-                    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or 'avc1' for H.264
+                    # Initialize video writer with MJPG codec which has good compatibility with MP4
+                    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+                    # Ensure filename has .mp4 extension
+                    if not filename.lower().endswith('.mp4'):
+                        filename = filename + '.mp4'
+                    
                     self.video_writer = cv2.VideoWriter(
                         filename, fourcc, self.fps, (width, height)
                     )
@@ -305,6 +326,10 @@ class ThorlabsCameraApp(QMainWindow):
                     if self.video_writer.isOpened():
                         self.recording = True
                         self.recording_start_time = time.time()
+                        # Initialize recording limits
+                        self.record_duration_limit = self.duration_spinbox.value()
+                        self.record_frame_limit = self.framecount_spinbox.value()
+                        self.recorded_frame_count = 0
                         self.record_button.setText("Stop Recording")
                         self.recording_label.setText("Recording started")
                         self.statusBar().showMessage(f"Recording to {filename}")

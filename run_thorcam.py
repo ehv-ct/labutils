@@ -177,164 +177,161 @@ class ThorlabsCameraApp(QMainWindow):
             
             # Convert frame to numpy array
             image_data = frame.image_buffer
-            width = frame.widthribute names for frame dimensions
-            height = frame.heightidth
+            width = frame.image_width
             height = frame.image_height
+            
             # Create numpy array from image data
-            if frame.bit_depth <= 8:m image data
+            if frame.bit_depth <= 8:
                 image = np.frombuffer(image_data, dtype=np.uint8).reshape(height, width)
-            else:mage = np.frombuffer(image_data, dtype=np.uint8).reshape(height, width)
+            else:
                 # For 16-bit images, we need to rescale to 8-bit for display
                 image = np.frombuffer(image_data, dtype=np.uint16).reshape(height, width)
                 image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-                image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+            
             # Record video if needed
             if self.recording and self.video_writer:
                 # OpenCV expects BGR format, but our image is grayscale
-                # Convert to BGR by duplicating the channelis grayscale
+                # Convert to BGR by duplicating the channels
                 color_image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-                self.video_writer.write(color_image)2.COLOR_GRAY2BGR)
                 self.video_writer.write(color_image)
+                
                 # Update recording duration
                 duration = time.time() - self.recording_start_time
                 self.recording_label.setText(f"Recording: {duration:.1f}s")
-                self.recording_label.setText(f"Recording: {duration:.1f}s")
+                
             # Display the image
             q_image = QImage(image.data, width, height, width, QImage.Format_Grayscale8)
-            pixmap = QPixmap.fromImage(q_image) height, width, QImage.Format_Grayscale8)
             pixmap = QPixmap.fromImage(q_image)
+            
             # Scale pixmap to fit the label while maintaining aspect ratio
-            self.image_label.setPixmap(pixmap.scaled(ntaining aspect ratio
-                self.image_label.width(), map.scaled(
+            self.image_label.setPixmap(pixmap.scaled(
+                self.image_label.width(), 
                 self.image_label.height(),
-                Qt.KeepAspectRatio,ight(),
+                Qt.KeepAspectRatio,
                 Qt.SmoothTransformation
-            ))  Qt.SmoothTransformation
             ))
+            
             # Calculate and show actual FPS
-            self.frame_count += 1actual FPS
+            self.frame_count += 1
             elapsed = time.time() - self.last_frame_time
             if elapsed >= 1.0:  # Update FPS display every second
-                actual_fps = self.frame_count / elapsedery second
+                actual_fps = self.frame_count / elapsed
                 self.fps_label.setText(f"{actual_fps:.1f}")
-                self.frame_count = 0xt(f"{actual_fps:.1f}")
+                self.frame_count = 0
                 self.last_frame_time = time.time()
-                self.last_frame_time = time.time()
+                
         except Exception as e:
             self.statusBar().showMessage(f"Error acquiring frame: {str(e)}")
-            print(f"Frame error: {str(e)}")Error acquiring frame: {str(e)}")
             print(f"Frame error: {str(e)}")
+    
     def exposure_slider_changed(self):
         # Convert slider value (which is integer) to actual exposure in ms
-        exposure_ms = self.exposure_slider.value() / 10.0al exposure in ms
-        self.exposure_value.blockSignals(True)ue() / 10.0
+        exposure_ms = self.exposure_slider.value() / 10.0
+        self.exposure_value.blockSignals(True)
         self.exposure_value.setValue(exposure_ms)
-        self.exposure_value.blockSignals(False)s)
-        self.set_exposure(exposure_ms)ls(False)
+        self.exposure_value.blockSignals(False)
         self.set_exposure(exposure_ms)
+    
     def set_exposure(self, value_ms):
-        if self.camera:lf, value_ms):
+        if self.camera:
             # Convert from ms to μs for the camera
             self.camera.exposure_time_us = int(value_ms * 1000)
             self.statusBar().showMessage(f"Exposure set to {value_ms} ms")
-            self.statusBar().showMessage(f"Exposure set to {value_ms} ms")
             # Update slider if value was changed directly
-            slider_value = int(value_ms * 10)ged directly
+            slider_value = int(value_ms * 10)
             if self.exposure_slider.value() != slider_value:
-                self.exposure_slider.blockSignals(True)alue:
+                self.exposure_slider.blockSignals(True)
                 self.exposure_slider.setValue(slider_value)
-                self.exposure_slider.blockSignals(False)ue)
                 self.exposure_slider.blockSignals(False)
+    
     def framerate_slider_changed(self):
         fps = self.framerate_slider.value()
         self.framerate_value.blockSignals(True)
-        self.framerate_value.setValue(fps)True)
+        self.framerate_value.setValue(fps)
         self.framerate_value.blockSignals(False)
-        self.set_framerate(fps)ockSignals(False)
         self.set_framerate(fps)
+    
     def set_framerate(self, fps):
-        self.fps = fpsself, fps):
+        self.fps = fps
         if self.timer.isActive():
-            self.timer.stop()e():
+            self.timer.stop()
             self.timer.start(int(1000 / fps))
         self.statusBar().showMessage(f"Frame rate set to {fps} FPS")
-        self.statusBar().showMessage(f"Frame rate set to {fps} FPS")
         # Update slider if value was changed directly
-        if self.framerate_slider.value() != fps:ectly
+        if self.framerate_slider.value() != fps:
             self.framerate_slider.blockSignals(True)
-            self.framerate_slider.setValue(fps)True)
+            self.framerate_slider.setValue(fps)
             self.framerate_slider.blockSignals(False)
-            self.framerate_slider.blockSignals(False)
+    
     def toggle_recording(self):
-        if not self.recording::
-            # Start recording:
-            try:art recording
+        if not self.recording:
+            # Start recording
+            try:
                 filename, _ = QFileDialog.getSaveFileName(
-                    self, "Save Video", g.getSaveFileName(
+                    self, "Save Video", 
                     f"camera_recording_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4",
-                    "Video Files (*.mp4)"atetime.now().strftime('%Y%m%d_%H%M%S')}.mp4",
-                )   "Video Files (*.mp4)"
+                    "Video Files (*.mp4)"
                 )
                 if filename:
                     # Get camera resolution
-                    if self.camera:solution
+                    if self.camera:
                         # Get a frame to determine dimensions
                         frame = self.camera.get_pending_frame_or_null()
-                        if frame:eight = self.camera.sensor_height_pixels
+                        if frame:
                             width = frame.image_width
-                            height = frame.image_height available
-                        else:    width, height = 1280, 1024
+                            height = frame.image_height
+                        else:
                             # Default if no frame is available
                             width, height = 1280, 1024
-                    else:4v')  # or 'avc1' for H.264
+                    else:
                         # Default if camera is not available
-                        width, height = 1280, 1024   filename, fourcc, self.fps, (width, height)
-                    )
+                        width, height = 1280, 1024
+                    
                     # Initialize video writer (MP4 with H.264 codec)
-                    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or 'avc1' for H.264ened():
+                    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or 'avc1' for H.264
                     self.video_writer = cv2.VideoWriter(
                         filename, fourcc, self.fps, (width, height)
                     )
                     
-                    if self.video_writer.isOpened():elf.statusBar().showMessage(f"Recording to {filename}")
+                    if self.video_writer.isOpened():
                         self.recording = True
-                        self.recording_start_time = time.time()sBar().showMessage("Failed to create video writer")
+                        self.recording_start_time = time.time()
                         self.record_button.setText("Stop Recording")
-                        self.recording_label.setText("Recording started")rding error: {str(e)}")
-                        self.statusBar().showMessage(f"Recording to {filename}")   print(f"Recording error: {str(e)}")
+                        self.recording_label.setText("Recording started")
+                        self.statusBar().showMessage(f"Recording to {filename}")
                     else:
                         self.statusBar().showMessage("Failed to create video writer")
             except Exception as e:
-                self.statusBar().showMessage(f"Recording error: {str(e)}")e()
-                print(f"Recording error: {str(e)}")    self.video_writer = None
+                self.statusBar().showMessage(f"Recording error: {str(e)}")
+                print(f"Recording error: {str(e)}")
+                self.video_writer = None
         else:
             # Stop recording
             if self.video_writer:
                 self.video_writer.release()
-                self.video_writer = None        self.statusBar().showMessage("Recording stopped")
+                self.video_writer = None
             
             self.recording = False
             self.record_button.setText("Start Recording")
-            self.recording_label.setText("Not Recording")o_writer:
-            self.statusBar().showMessage("Recording stopped")    self.video_writer.release()
+            self.recording_label.setText("Not Recording")
+            self.statusBar().showMessage("Recording stopped")
     
     def closeEvent(self, event):
         # Cleanup when application is closed
-        if self.recording and self.video_writer:    self.camera.dispose()
+        if self.recording and self.video_writer:
             self.video_writer.release()
         
-        if self.camera:    self.sdk.dispose()
+        if self.camera:
             self.camera.disarm()
-            self.camera.dispose()        event.accept()
+            self.camera.dispose()
         
         if self.sdk:
             self.sdk.dispose()
-        labsCameraApp()
+        
         event.accept()
 
-
-
-
-
-
-    sys.exit(app.exec_())    window.show()    window = ThorlabsCameraApp()    app = QApplication(sys.argv)if __name__ == "__main__":    sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = ThorlabsCameraApp()
+    window.show()
+    sys.exit(app.exec_())

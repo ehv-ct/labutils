@@ -175,9 +175,10 @@ class ThorlabsCameraApp(QMainWindow):
             if frame is None:
                 return
             
-            # Get camera information instead of trying to get it from the frame
-            width = self.camera.width
-            height = self.camera.height
+            # Use frame dimensions and data format information from the frame itself
+            # These are the correct properties to access in the TLCamera SDK
+            width = frame.image_buffer_size_pixels_horizontal
+            height = frame.image_buffer_size_pixels_vertical
             bit_depth = self.camera.bit_depth
             
             # Convert frame to numpy array
@@ -278,9 +279,15 @@ class ThorlabsCameraApp(QMainWindow):
                 if filename:
                     # Get camera resolution
                     if self.camera:
-                        # Use camera properties to get dimensions
-                        width = self.camera.width
-                        height = self.camera.height
+                        # Get a frame to determine dimensions
+                        frame = self.camera.get_pending_frame_or_null()
+                        if frame:
+                            width = frame.image_buffer_size_pixels_horizontal
+                            height = frame.image_buffer_size_pixels_vertical
+                        else:
+                            # If no frame is available, use sensor dimensions
+                            width = self.camera.sensor_width_pixels
+                            height = self.camera.sensor_height_pixels
                     else:
                         # Default if camera is not available
                         width, height = 1280, 1024

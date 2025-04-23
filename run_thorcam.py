@@ -175,13 +175,16 @@ class ThorlabsCameraApp(QMainWindow):
             if frame is None:
                 return
             
+            # Get camera information instead of trying to get it from the frame
+            width = self.camera.width
+            height = self.camera.height
+            bit_depth = self.camera.bit_depth
+            
             # Convert frame to numpy array
             image_data = frame.image_buffer
-            width = frame.image_width
-            height = frame.image_height
             
             # Create numpy array from image data
-            if frame.bit_depth <= 8:
+            if bit_depth <= 8:
                 image = np.frombuffer(image_data, dtype=np.uint8).reshape(height, width)
             else:
                 # For 16-bit images, we need to rescale to 8-bit for display
@@ -275,14 +278,9 @@ class ThorlabsCameraApp(QMainWindow):
                 if filename:
                     # Get camera resolution
                     if self.camera:
-                        # Get a frame to determine dimensions
-                        frame = self.camera.get_pending_frame_or_null()
-                        if frame:
-                            width = frame.image_width
-                            height = frame.image_height
-                        else:
-                            # Default if no frame is available
-                            width, height = 1280, 1024
+                        # Use camera properties to get dimensions
+                        width = self.camera.width
+                        height = self.camera.height
                     else:
                         # Default if camera is not available
                         width, height = 1280, 1024

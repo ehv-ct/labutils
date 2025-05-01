@@ -1,0 +1,385 @@
+# EPICS Database for Leybold Turbolab Pumping Station
+# This file defines all the EPICS Process Variables (PVs) required for the
+# Leybold Turbolab pumping station at 192.168.1.15
+
+#####################################################################
+# Record templates for different data types - Reference only, not used directly
+#####################################################################
+
+# Template for analog values (with proper units)
+# record(ai, "$(P)$(R)") {
+#     field(DESC, "$(DESC)")
+#     field(SCAN, "I/O Intr")
+#     field(DTYP, "Soft Channel")
+#     field(PREC, "$(PREC=2)")
+#     field(EGU,  "$(EGU)")
+#     field(HIGH, "$(HIGH=0)")
+#     field(HIHI, "$(HIHI=0)")
+#     field(LOW,  "$(LOW=0)")
+#     field(LOLO, "$(LOLO=0)")
+#     field(HSV,  "MINOR")
+#     field(HHSV, "MAJOR")
+#     field(LSV,  "MINOR")
+#     field(LLSV, "MAJOR")
+#     field(HYST, "$(HYST=0)")
+#     field(ADEL, "$(ADEL=0)")
+#     field(MDEL, "$(MDEL=0)")
+#     info(archive, "Monitor, 10 second")
+# }
+
+#####################################################################
+# Turbo Pump Records
+#####################################################################
+
+# Turbo pump speed
+record(ai, "$(P)TURBO_PUMP_SPEED") {
+    field(DESC, "Turbo Pump Speed")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "rpm")
+    field(HOPR, "100000")
+    field(LOPR, "0")
+    field(HIGH, "90000")
+    field(HIHI, "95000")
+    field(LOW,  "100")
+    field(LOLO, "0")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    field(LSV,  "MINOR")
+    field(LLSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump current
+record(ai, "$(P)TURBO_PUMP_CURRENT") {
+    field(DESC, "Turbo Pump Current")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "2")
+    field(EGU,  "A")
+    field(HOPR, "10")
+    field(LOPR, "0")
+    field(HIGH, "8")
+    field(HIHI, "9")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump power
+record(ai, "$(P)TURBO_PUMP_POWER") {
+    field(DESC, "Turbo Pump Power")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "1")
+    field(EGU,  "W")
+    field(HOPR, "1000")
+    field(LOPR, "0")
+    field(HIGH, "800")
+    field(HIHI, "900")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump drive temperature
+record(ai, "$(P)TURBO_PUMP_DRIVE_TEMP") {
+    field(DESC, "Turbo Pump Drive Temp")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "1")
+    field(EGU,  "°C")
+    field(HOPR, "150")
+    field(LOPR, "0")
+    field(HIGH, "80")
+    field(HIHI, "90")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump bearing temperature
+record(ai, "$(P)TURBO_PUMP_BEARING_TEMP") {
+    field(DESC, "Turbo Pump Bearing Temp")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "1")
+    field(EGU,  "°C")
+    field(HOPR, "150")
+    field(LOPR, "0")
+    field(HIGH, "70")
+    field(HIHI, "80")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump status
+record(mbbi, "$(P)TURBO_PUMP_STATUS") {
+    field(DESC, "Turbo Pump Status")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "Off")
+    field(ONST, "Starting")
+    field(TWST, "Normal operation")
+    field(THST, "Stopping")
+    field(FRST, "Fault")
+    field(FVST, "Maintenance required")
+    field(UNSV, "INVALID")
+    field(ZRSV, "MINOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "MINOR")
+    field(FRSV, "MAJOR")
+    field(FVSV, "MINOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump status as text
+record(stringin, "$(P)TURBO_PUMP_STATUS_TEXT") {
+    field(DESC, "Turbo Pump Status Text")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    info(archive, "Monitor, 10 second")
+}
+
+# Turbo pump operating hours
+record(ai, "$(P)TURBO_PUMP_HOURS") {
+    field(DESC, "Turbo Pump Hours")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "h")
+    field(HOPR, "100000")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+#####################################################################
+# Backing Pump Records
+#####################################################################
+
+# Backing pump speed
+record(ai, "$(P)BACKING_PUMP_SPEED") {
+    field(DESC, "Backing Pump Speed")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "rpm")
+    field(HOPR, "10000")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump current
+record(ai, "$(P)BACKING_PUMP_CURRENT") {
+    field(DESC, "Backing Pump Current")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "2")
+    field(EGU,  "A")
+    field(HOPR, "10")
+    field(LOPR, "0")
+    field(HIGH, "8")
+    field(HIHI, "9")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump power
+record(ai, "$(P)BACKING_PUMP_POWER") {
+    field(DESC, "Backing Pump Power")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "1")
+    field(EGU,  "W")
+    field(HOPR, "1000")
+    field(LOPR, "0")
+    field(HIGH, "800")
+    field(HIHI, "900")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump temperature
+record(ai, "$(P)BACKING_PUMP_TEMP") {
+    field(DESC, "Backing Pump Temperature")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "1")
+    field(EGU,  "°C")
+    field(HOPR, "150")
+    field(LOPR, "0")
+    field(HIGH, "80")
+    field(HIHI, "90")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump status
+record(mbbi, "$(P)BACKING_PUMP_STATUS") {
+    field(DESC, "Backing Pump Status")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "Off")
+    field(ONST, "Starting")
+    field(TWST, "Normal operation")
+    field(THST, "Stopping")
+    field(FRST, "Fault")
+    field(FVST, "Maintenance required")
+    field(UNSV, "INVALID")
+    field(ZRSV, "MINOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "MINOR")
+    field(FRSV, "MAJOR")
+    field(FVSV, "MINOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump status as text
+record(stringin, "$(P)BACKING_PUMP_STATUS_TEXT") {
+    field(DESC, "Backing Pump Status Text")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    info(archive, "Monitor, 10 second")
+}
+
+# Backing pump operating hours
+record(ai, "$(P)BACKING_PUMP_HOURS") {
+    field(DESC, "Backing Pump Hours")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "h")
+    field(HOPR, "100000")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+#####################################################################
+# Pressure Records
+#####################################################################
+
+# Inlet pressure
+record(ai, "$(P)INLET_PRESSURE") {
+    field(DESC, "Inlet Pressure")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "3")
+    field(EGU,  "mbar")
+    field(HOPR, "1000")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+# Foreline pressure
+record(ai, "$(P)FORELINE_PRESSURE") {
+    field(DESC, "Foreline Pressure")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "3")
+    field(EGU,  "mbar")
+    field(HOPR, "1000")
+    field(LOPR, "0")
+    field(HIGH, "10")
+    field(HIHI, "100")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Chamber pressure
+record(ai, "$(P)CHAMBER_PRESSURE") {
+    field(DESC, "Chamber Pressure")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "3")
+    field(EGU,  "mbar")
+    field(HOPR, "1000")
+    field(LOPR, "0")
+    field(HIGH, "1E-3")
+    field(HIHI, "1E-1")
+    field(HSV,  "MINOR")
+    field(HHSV, "MAJOR")
+    info(archive, "Monitor, 10 second")
+}
+
+#####################################################################
+# System Status Records
+#####################################################################
+
+# Overall system status
+record(mbbi, "$(P)SYSTEM_STATUS") {
+    field(DESC, "System Status")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "Off")
+    field(ONST, "Starting")
+    field(TWST, "Normal operation")
+    field(THST, "Stopping")
+    field(FRST, "Fault")
+    field(FVST, "Maintenance required")
+    field(UNSV, "INVALID")
+    field(ZRSV, "MINOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "MINOR")
+    field(FRSV, "MAJOR")
+    field(FVSV, "MINOR")
+    info(archive, "Monitor, 10 second")
+}
+
+# Error code
+record(ai, "$(P)ERROR_CODE") {
+    field(DESC, "Error Code")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "")
+    field(HOPR, "65535")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+# Warning code
+record(ai, "$(P)WARNING_CODE") {
+    field(DESC, "Warning Code")
+    field(SCAN, "1 second")
+    field(DTYP, "Soft Channel")
+    field(PREC, "0")
+    field(EGU,  "")
+    field(HOPR, "65535")
+    field(LOPR, "0")
+    info(archive, "Monitor, 10 second")
+}
+
+# System status text display
+record(stringout, "$(P)SYSTEM_STATUS_TEXT") {
+    field(DESC, "System Status Text")
+    field(DTYP, "Soft Channel")
+    field(VAL, "Unknown")
+    field(PINI, "YES")
+}

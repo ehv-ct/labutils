@@ -22,7 +22,7 @@ dbLoadDatabase
 softIoc_registerRecordDeviceDriver(pdbbase)
 
 # Now load the actual databases
-dbLoadRecords("/home/controls/labutils/leybold_turbolab.db", "P=AUX:,R=,DESC=,EGU=")
+dbLoadRecords("/home/controls/labutils/leybold_turbolab.db", "P=Y1:,R=AUX-,DESC=,EGU=")
 
 iocInit
 dbl

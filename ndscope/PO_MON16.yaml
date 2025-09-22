@@ -1,0 +1,36 @@
+color-mode: dark
+font-size: 10
+grid-alpha: 0.2
+plots:
+- channels:
+    Y1:DMD-POX_OUT16:
+      color: '#1f77b4'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+  col: 0
+  colspan: 1
+  row: 0
+  rowspan: 1
+  y-range: auto
+- channels:
+    Y1:DMD-POZ_OUT16:
+      color: '#2ca02c'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+  col: 0
+  colspan: 1
+  row: 1
+  rowspan: 1
+  y-range: auto
+t0: 1436629171.875
+time-axis-mode: relative
+time-window:
+- -300.0
+- 0.0
+window-title: ndscope

@@ -1,0 +1,31 @@
+color-mode: dark
+font-size: 10
+grid-alpha: 0.2
+plots:
+- channels:
+    Y1:AUX-CHAMBER_PRESSURE:
+      color: '#1f77b4'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 3
+    Y1:AUX-FORELINE_PRESSURE:
+      color: '#2ca02c'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 3
+  col: 0
+  colspan: 1
+  log-scale: true
+  row: 0
+  rowspan: 1
+  y-range: auto
+t0: 1439065655.25
+time-axis-mode: relative
+time-window:
+- -3600.0
+- 0.0
+window-title: Y1:AUX-CHAMBER_PRESSURE

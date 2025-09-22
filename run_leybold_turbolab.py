@@ -892,7 +892,7 @@ def main():
     )
     parser.add_argument(
         '--prefix',
-        default='AUX:',
+        default='Y1:AUX-',
         help='Prefix for EPICS PVs (default: AUX:)'
     )
     parser.add_argument(

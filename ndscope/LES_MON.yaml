@@ -1,0 +1,56 @@
+color-mode: dark
+font-size: 10
+grid-alpha: 0.2
+plots:
+- channels:
+    Y1:DMD-LESZ_PIT_IN1_DQ:
+      color: '#2ca02c'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+  col: 0
+  colspan: 1
+  row: 0
+  rowspan: 1
+  y-range: auto
+- channels:
+    Y1:DMD-LESZ_YAW_IN1_DQ:
+      color: '#d62728'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+  col: 0
+  colspan: 1
+  row: 1
+  rowspan: 1
+  y-range: auto
+- channels:
+    Y1:DMD-LESX_SUM_IN1_DQ:
+      color: '#e377c2'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+    Y1:DMD-LESZ_SUM_IN1_DQ:
+      color: '#8c564b'
+      label: null
+      offset: 0.0
+      scale: 1.0
+      unit: null
+      width: 1
+  col: 0
+  colspan: 1
+  row: 2
+  rowspan: 1
+  y-range: auto
+t0: 1440890125.9375
+time-axis-mode: relative
+time-window:
+- -60.0
+- 0.0
+window-title: Y1:DMD-LESZ_YAW_IN1 Y1:DMD-LESZ_PIT_IN1

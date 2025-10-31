@@ -1,0 +1,7 @@
+amp: 1
+amplitude increment: 1.4142135623730951
+base frequency: 1
+end amp: 2
+no_pulses: 3
+stop frequency: 100
+sweep duration: 3

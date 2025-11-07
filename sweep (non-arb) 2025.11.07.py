@@ -34,7 +34,7 @@ no_pulses = 10 #Number of pulses (note: redundant as amp_incr and the other vari
 
 
 
-#Read conf.yaml file for parameters, output signal duration and number of pulses,
+#Read conf_sweep.yaml file for parameters, output signal duration and number of pulses,
 # and ask use for confirmation before producing signal
 check_sig = True
 while check_sig:
@@ -42,10 +42,10 @@ while check_sig:
 
         #Read configuration from yaml file
         try: 
-            with open('conf.yaml', 'r') as file:
+            with open('conf_sweep.yaml', 'r') as file:
                 loaded_conf = yaml.safe_load(file)
 
-            print("\nData read from 'conf.yaml':")
+            print("\nData read from 'conf_sweep.yaml':")
             [print(f"{key}: {value}") for key, value in loaded_conf.items()]
             amp = loaded_conf['amp']
             end_amp = loaded_conf['end amp']
@@ -58,7 +58,7 @@ while check_sig:
             no_pulses = loaded_conf['no_pulses']
 
         except Exception as e:
-            print(f"An error occurred in trying to load conf.yaml: {e}")
+            print(f"An error occurred in trying to load conf_sweep.yaml: {e}")
             print('Using default parameters.')
         
         #Calculate time of signal and no_pulses if amp_incr is given
@@ -76,7 +76,7 @@ while check_sig:
 
         #Output signal duration and number of pulses and ask for user confirmation 
         foo = input('\nTotal signal duration is ' + str(max_time) + 's, with ' + str(no_pulses) + 
-                    ' pulses. Enter y to proceed or upload new conf.yaml file\n')
+                    ' pulses. Enter y to proceed or upload new conf_sweep.yaml file\n')
         if foo == 'y':
             check_sig = False
     
@@ -97,7 +97,7 @@ conf = {
 
 
 #Put date, time etc. in conf file name
-file_name = datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss") + "_conf.yaml"
+file_name = datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss") + "_conf_sweep.yaml"
 
 #Save conf as yaml file
 with open(file_name,'w') as file:
@@ -147,3 +147,4 @@ finally:
 
     i.relinquish_ownership()
     sys.exit("Program terminated.")
+

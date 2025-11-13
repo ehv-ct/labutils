@@ -6,6 +6,7 @@ import yaml
 from moku.instruments import WaveformGenerator
 from datetime import datetime
 
+#Note: active channel set to 4. TO DO: Add channel no. variable. 
 
 #Ask user to input IP address of Moku device
 ip_flag = True
@@ -99,7 +100,7 @@ try:
 
     elif no_pulses != 0:
         #Offset set to amp/2 so the pulse is from 0V 
-        i.generate_waveform(channel=2, type='Pulse', amplitude=amp, 
+        i.generate_waveform(channel=4, type='Pulse', amplitude=amp, 
                             pulse_width = pulse_width, edge_time = edge_width, frequency=freq, offset=amp/2)
     
         print('Printing summary of initial state: \n')
@@ -118,7 +119,7 @@ try:
             
             if pulse_index == abs(no_pulses):
                 #print('Running... Press Ctrl + C to stop. Pulse ',pulse_index,' of ', no_pulses)
-                i.generate_waveform(channel=2, type='Off')
+                i.generate_waveform(channel=4, type='Off')
                 
             time.sleep((1/freq)*0.5) #The timing may eventually get thrown off for very
                                         #long pulse signals 
@@ -132,11 +133,12 @@ except KeyboardInterrupt:
 
 finally:
     #A little laggy here, pulse continues for a little longer than desired before shutting off. 
-    i.generate_waveform(channel=1, type='Off')
     i.generate_waveform(channel=2, type='Off')
+    i.generate_waveform(channel=4, type='Off')
 
     print('Printing endstate summary: \n')
     print(i.summary())
 
     i.relinquish_ownership()
     sys.exit("Program terminated.")
+

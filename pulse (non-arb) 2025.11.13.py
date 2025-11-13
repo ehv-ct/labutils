@@ -50,6 +50,12 @@ while check_sig:
             edge_width = loaded_conf['edge width']
             no_pulses = loaded_conf['no_pulses']
 
+            amp = float(amp)
+            freq = float(freq)
+            pulse_width = float(pulse_width)
+            edge_width = float(edge_width)
+            no_pulses = int(no_pulses)
+
         except Exception as e:
             print(f"An error occurred in trying to load conf_pulse.yaml: {e}")
             print('Using default parameters.')
@@ -100,6 +106,8 @@ try:
 
     elif no_pulses != 0:
         #Offset set to amp/2 so the pulse is from 0V 
+
+        i.set_output_termination(channel_no, 'HiZ')
         i.generate_waveform(channel=channel_no, type='Pulse', amplitude=amp, 
                             pulse_width = pulse_width, edge_time = edge_width, frequency=freq, offset=amp/2)
     
